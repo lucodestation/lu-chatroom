@@ -6,7 +6,7 @@
 
 [项目演示](https://lucodestation.github.io/lucodestation-chatroom)
 
-[项目源码](https://github.com/lucodestation/lucodestation-chatroom)
+[项目源码](https://github.com/lucodestation/lucodestation-chatroom-source)
 
 [后端接口地址](https://lucodestation-chartoom-api.glitch.me)
 
