@@ -19,6 +19,7 @@
         <!-- 登录界面 -->
         <Login 
         v-else 
+        :connected="connected"
         @loginEvent="loginEvent"/>
       </el-main>
     </el-container>
@@ -45,7 +46,8 @@ export default {
       onlineUserList: [],
       currentUser: '',
       messageList: [],
-      isLogged: false
+      isLogged: false,
+      connected: false
     }
   },
   computed: {
@@ -93,6 +95,7 @@ export default {
     this.socket.on('connect', () => {
       // 关闭加载 loading
       loading.close()
+      this.connected = true
       this.$message.success({
         message: '连接 socket.io 服务器成功，请登录。',
         center: true

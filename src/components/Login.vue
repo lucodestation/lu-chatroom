@@ -17,7 +17,7 @@
 <script>
 export default {
   name: 'Login',
-  props: ['loginEvent'],
+  props: ['loginEvent', 'connected'],
   data() {
     return {
       username: ''
@@ -35,8 +35,10 @@ export default {
       
     }
   },
-  mounted() {
-    this.$refs.loginInput.focus()
+  watch: {
+    connected() {
+      this.connected && this.$refs.loginInput.focus()
+    }
   }
 }
 </script>
