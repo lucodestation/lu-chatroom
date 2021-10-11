@@ -1,3 +1,3 @@
 module.exports = {
-  publicPath: '/lucodestation-chatroom/'
+  // publicPath: '/lucodestation-chatroom/'
 }
