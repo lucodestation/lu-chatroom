@@ -117,19 +117,11 @@ dl dd {
   white-space: pre;
   vertical-align: top;
   margin: 0;
+  padding: 0 1em;
 }
 dl dt .date {
   font-size: 14px;
   color: #aaa;
 }
-dl dd {
-  display: inline-block;
-  white-space: pre;
-  vertical-align: top;
-  margin: 0;
-}
 
-@media (max-width: 320px) {
-
-}
 </style>
