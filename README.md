@@ -4,9 +4,9 @@
 
 使用 socket.io-client 连接 [socket.io](https://socket.io/) 服务器。
 
-[项目演示](https://lucodestation.github.io/lucodestation-chatroom)
+[项目演示](https://lu-chatroom.vercel.app/)
 
-[项目源码](https://github.com/lucodestation/lucodestation-chatroom-source)
+[项目源码](https://github.com/lucodestation/lu-chatroom)
 
 [后端接口地址](https://lucodestation-chartoom-api.glitch.me)
 
