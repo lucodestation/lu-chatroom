@@ -1,6 +1,6 @@
 <template>
   <div>
-      <h2>登录</h2>
+      <h2 class="flow-text">登录</h2>
         <el-form @submit.native="submit">
           <el-col :xs="{span: 18, offset: 3}" :span="12" :offset="6">
             <el-col :span="20">
