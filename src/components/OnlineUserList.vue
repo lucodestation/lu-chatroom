@@ -1,9 +1,10 @@
 <template>
   <div>
-    <h2>在线用户</h2>
+    <h2 class="flow-text">在线用户</h2>
     <el-table
     :data="this.onlineUserList.map(item => ({ username: item }))"
     :show-header="false"
+    empty-text="暂无用户"
     border
     stripe>
       <el-table-column

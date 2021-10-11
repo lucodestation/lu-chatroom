@@ -2,12 +2,22 @@
   <el-container id="app" class="container">
     <!-- 大标题 -->
     <el-header>
-      <h1 v-html="pageTitle"></h1>
+      <el-row align="middle" type="flex">
+        <el-col :span="1">
+          <i class="el-icon-user" @click="drawer = true"></i>
+        </el-col>
+        <el-col :span="22">
+          <h1 class="flow-text">在线聊天室</h1>
+        </el-col>
+        <el-col :span="1">
+          <i class="el-icon-info" @click="dialogVisible = true"></i>
+        </el-col>
+      </el-row>
     </el-header>
 
     <el-container class="main">
       <!-- 侧栏。在线用户列表 -->
-      <el-aside style="width: 240px;">
+      <el-aside style="width: 160px;">
         <!-- 在线用户列表 -->
         <OnlineUserList :onlineUserList="onlineUserList"/>
       </el-aside>
@@ -19,10 +29,44 @@
         <!-- 登录界面 -->
         <Login 
         v-else 
-        :connected="connected"
+        :loginStart="loginStart"
         @loginEvent="loginEvent"/>
       </el-main>
     </el-container>
+
+    <el-drawer
+      title="在线用户"
+      :with-header="false"
+      :visible.sync="drawer"
+      :size="'44%'"
+      :direction="direction">
+      <OnlineUserList :onlineUserList="onlineUserList"/>
+    </el-drawer>
+
+    <el-dialog
+      title=""
+      :visible.sync="dialogVisible"
+      width="80%"
+      >
+      <div>
+        <h3>使用方法：</h3>
+        <ul>
+          <li>随便输入一个用户名（不能和已登录的用户名相同）即可登录。</li>
+          <li>登录后即可开始聊天。输入聊天内容后点击 <strong>发送</strong> 或按 <strong><kbd>Ctrl</kbd> + <kbd>Enter</kbd></strong> 即可发送消息。</li>
+          <li>快让您的朋友们加入聊天室大家一块儿畅聊吧！</li>
+        </ul>
+
+        <h3>注意事项：</h3>
+        <ul>
+          <li>您发送的消息对当前在线的所有用户可见，请注意个人隐私。</li>
+          <li>您登录的用户会在浏览器刷新后自动下线，并且所有聊天记录不会被保存。</li>
+          <li>您只能看到您登录之后的聊天记录，您登录之前其他人发的聊天记录您无法看到。</li>
+        </ul>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogVisible = false">我已了解</el-button>
+      </span>
+    </el-dialog>
   </el-container>
 </template>
 
@@ -41,13 +85,16 @@ import Login from './components/Login'
 export default {
   data() {
     return {
-      pageTitle: '聊天室',
       socket: '',
       onlineUserList: [],
       currentUser: '',
       messageList: [],
       isLogged: false,
-      connected: false
+      loginStart: false,
+      isOnline: false,
+      drawer: false,
+      direction: 'ltr',
+      dialogVisible: false
     }
   },
   computed: {
@@ -59,6 +106,14 @@ export default {
   },
   methods: {
     loginEvent(username) {
+      this.loginStart = true;
+      if (!this.isOnline) {
+        this.$message.error({
+          message: '服务器连接失败，请稍后刷新重试或联系管理员。',
+          center: true
+        });
+        this.loginStart = false;
+      }
       this.socket.emit("login", username);
       this.currentUser = username;
     },
@@ -68,13 +123,6 @@ export default {
     
   },
   mounted() {
-    // 加载 loading
-    const loading = this.$loading({
-      lock: true,
-      text: '正在连接服务器...',
-      spinner: 'el-icon-loading',
-      background: 'rgba(255, 255, 255, 0.7)'
-    });
 
     // 连接 socket.io 服务器
     this.socket = io('https://lucodestation-chartoom-api.glitch.me');
@@ -83,24 +131,12 @@ export default {
       // 如果连接失败，禁止再次尝试连接
       // 否则在控制台会看到一直在请求连接
       this.socket.close();
-      // 关闭加载 loading
-      loading.close()
-      // 消息提示
-      this.$message.error({
-        message: '连接 socket.io 服务器失败，请刷新后重试。',
-        center: true
-      });
     });
     // 连接成功
     this.socket.on('connect', () => {
-      // 关闭加载 loading
-      loading.close()
-      this.connected = true
-      this.$message.success({
-        message: '连接 socket.io 服务器成功，请登录。',
-        center: true
-      });
-    })
+      console.log('服务器连接成功');
+      this.isOnline = true;
+    });
 
     // 监听服务器返回的在线用户列表
     // 这里的监听不能写到事件处理程序中，否则会触发多次
@@ -109,16 +145,19 @@ export default {
       this.onlineUserList = result;
     })
 
-    // 监听登录状态，看是否登录成功
+    // 监听登录状态
     this.socket.on("login", result => {
       if (result.code < 0) {
+        // 登录失败
         this.$message.warning({
           message: result.message,
           center: true
         });
+        this.loginStart = false;
       } else {
-        this.pageTitle = `欢迎 ${this.currentUser} 来到聊天室`;
+        // 登录成功
         this.isLogged = true;
+        this.dialogVisible = true;
       }
     })
 
@@ -134,11 +173,29 @@ html, body {
 }
 body {
   margin: 0;
+  color: #444;
 }
 h2 {
   text-align: center;
 }
+.el-icon-user {
+  visibility: hidden;
+}
+@media (max-width: 600px) {
+  .el-aside {
+    display: none;
+  }
+  .el-icon-user {
+    visibility: visible;
+  }
+}
+@media (max-width: 320px) {
+  .el-main.el-main {
+    padding: 20px 4px;
+  }
+}
 </style>
+
 <style scoped>
 .el-header {
   background-color: #409eff;

@@ -1,42 +1,45 @@
 <template>
-  <el-container style="height: 100%;">
-          <el-main ref="showMessageList">
-            <div v-for="(item, index) in messageList" :key="index">
-              <!-- 当前用户聊天信息 -->
-              <p v-if="currentUser === item.username" class="i-said">
-                <span class="message">{{item.message}}</span>
-                <span class="username"> : {{item.username}}</span>
-              </p>
-              <!-- 其它用户聊天信息 -->
-              <p v-else>
-                <span class="username">{{item.username}} : </span>
-                <span class="message">{{item.message}}</span>
-              </p>
-            </div>
-          </el-main>
-          <el-footer style="height: auto;">
-            <el-form>
-              <el-form-item>
-                <el-input
-                  ref="inputMessage"
-                  type="textarea"
-                  :rows="3"
-                  placeholder="请输入内容"
-                  v-model="message"
-                  @keydown.enter.native="keydown"
-                  >
-                </el-input>
-              </el-form-item>
-              <el-form-item style="text-align: right;">
-                <div class="top">
-                  <el-tooltip class="item" effect="light" content="Ctrl + Enter" placement="top">
-                    <el-button type="primary" @click="submitMessage">发送<i class="el-icon-s-promotion el-icon--right"></i></el-button>
-                  </el-tooltip>
-                </div>
-              </el-form-item>
-            </el-form>
-          </el-footer>
-        </el-container>
+  <el-container>
+    <el-header>
+      <h2 class="flow-text">欢迎 <strong v-html="currentUser"></strong> 进入聊天室</h2>
+    </el-header>
+    <el-main ref="showMessageList">
+      <div v-for="(item, index) in messageList" :key="index">
+        <!-- 当前用户聊天信息 -->
+        <dl v-if="currentUser === item.username" class="i-said">
+          <dt><span class="date">({{item.date}})</span> {{item.username}}</dt>
+          <dd>{{item.message}}</dd>
+        </dl>
+        <!-- 其它用户聊天信息 -->
+        <dl v-else>
+          <dt>{{item.username}} <span class="date">({{item.date}})</span></dt>
+          <dd>{{item.message}}</dd>
+        </dl>
+      </div>
+    </el-main>
+    <el-footer style="height: auto;">
+      <el-form>
+        <el-form-item>
+          <el-input
+            ref="inputMessage"
+            type="textarea"
+            :rows="3"
+            placeholder="请输入内容"
+            v-model="message"
+            @keydown.enter.native="keydown"
+            >
+          </el-input>
+        </el-form-item>
+        <el-form-item style="text-align: right;">
+          <div class="top">
+            <el-tooltip class="item" effect="light" content="Ctrl + Enter" placement="top">
+              <el-button type="primary" @click="submitMessage">发送<i class="el-icon-s-promotion el-icon--right"></i></el-button>
+            </el-tooltip>
+          </div>
+        </el-form-item>
+      </el-form>
+    </el-footer>
+  </el-container>
 </template>
 
 <script>
@@ -68,6 +71,10 @@ export default {
     keydown(event) {
       // Ctrl + Enter 发送消息
       event.ctrlKey && this.submitMessage()
+    },
+    currentTime() {
+      const now = new Date();
+      return `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
     }
   },
   mounted() {
@@ -77,6 +84,19 @@ export default {
 </script>
 
 <style scoped>
+.el-container {
+  height: 100%;
+}
+.el-header {
+  background: #d9ecff;
+  padding: 0;
+}
+h2 {
+  font-weight: normal;
+  white-space: nowrap;
+  line-height: 1em;
+  /* background: red; */
+}
 .el-main {
   border: 1px solid #a0cfff;
 }
@@ -87,12 +107,29 @@ export default {
   color: #409eff;
   text-align: right;
 }
-span.username {
-  color: #999;
+dl dt {
+  color: #888;
+  margin: 10px 0;
+  white-space: nowrap;
 }
-span.message {
+dl dd {
   display: inline-block;
   white-space: pre;
   vertical-align: top;
+  margin: 0;
+}
+dl dt .date {
+  font-size: 14px;
+  color: #aaa;
+}
+dl dd {
+  display: inline-block;
+  white-space: pre;
+  vertical-align: top;
+  margin: 0;
+}
+
+@media (max-width: 320px) {
+
 }
 </style>
