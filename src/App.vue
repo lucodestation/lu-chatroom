@@ -48,6 +48,7 @@
       :visible.sync="dialogVisible"
       width="80%"
       >
+
       <div>
         <h3>使用方法：</h3>
         <ul>
@@ -180,6 +181,11 @@ h2 {
 }
 .el-icon-user {
   visibility: hidden;
+}
+@media (min-width: 900px) {
+  .el-dialog {
+    width: 50% !important;
+  }
 }
 @media (max-width: 600px) {
   .el-aside {
