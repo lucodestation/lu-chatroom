@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3 class="flow-text">在线用户</h3>
+    <h3 align="center">在线用户</h3>
     <el-table
     :data="this.onlineUserList.map(item => ({ username: item }))"
     :show-header="false"
