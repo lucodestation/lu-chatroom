@@ -105,15 +105,8 @@ export default {
     Login
   },
   methods: {
-    loginEvent(username) {
+    loginEvent: async function (username) {
       this.loginStart = true;
-      if (!this.isOnline) {
-        this.$message.error({
-          message: '服务器连接失败，请稍后刷新重试或联系管理员。',
-          center: true
-        });
-        this.loginStart = false;
-      }
       this.socket.emit("login", username);
       this.currentUser = username;
     },
@@ -131,6 +124,14 @@ export default {
       // 如果连接失败，禁止再次尝试连接
       // 否则在控制台会看到一直在请求连接
       this.socket.close();
+
+      if (this.loginStart) {
+        this.$message.error({
+          message: '服务器连接失败，请稍后刷新重试或联系管理员。',
+          center: true
+        });
+        this.loginStart = false
+      }
     });
     // 连接成功
     this.socket.on('connect', () => {
