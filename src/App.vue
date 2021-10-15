@@ -9,10 +9,9 @@
         <el-col :span="20">
           <h1 class="flow-text">在线聊天室</h1>
         </el-col>
-        <el-col :span="1">
+        <el-col :span="2">
           <i class="el-icon-info" @click="dialogVisible = true"></i>
         </el-col>
-        <el-col :span="1"> <GitHubIconLink /></el-col>
       </el-row>
     </el-header>
 
@@ -82,7 +81,6 @@ import { io } from 'socket.io-client';
 import OnlineUserList from './components/OnlineUserList';
 import Chat from './components/Chat';
 import Login from './components/Login';
-import GitHubIconLink from './components/GitHubIconLink';
 
 // const socket = io();
 
@@ -106,7 +104,6 @@ export default {
     OnlineUserList,
     Chat,
     Login,
-    GitHubIconLink,
   },
   methods: {
     loginEvent: async function (username) {
